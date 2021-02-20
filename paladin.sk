@@ -1,0 +1,105 @@
+# Built by Ser1618
+# Mend. Paladin's first active.
+on rightclick holding a golden shovel:
+
+        # Check if the player has the class node.
+        if player has permission "skript.paladin":
+
+
+                # Check if the player is wearing the armour
+                player is wearing all gold armour:
+
+
+                        # Make a local variable storing the time difference.
+                        set {_waited} to difference between {classability1-%player%} and now
+
+
+                        # Ability on cooldown.
+                        if {_waited} is smaller than 30 seconds:
+                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 This ability is on cooldown for another %difference between 30 seconds and {_waited}%&7!"
+                                stop
+                        # Run ability.
+                        else:
+                                send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You've used mend!"
+                                set {classability1-%player%} to now
+                                apply Regeneration 1 to player for 15 seconds
+
+
+                # Player is not wearing the right armour.
+                else:
+                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must use your class armour in order to use abilities!"
+
+
+        # If they don't have permission reply that they don't.
+        else:
+                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have this class and thus cannot use their ability."
+
+# Purify. Paladin's second ability.
+on leftclick holding a golden shovel:
+
+        # Check for permission node
+        if player has permission "skript.paladin":
+
+                # Check if player is wearing armour.
+                player is wearing all gold armour:
+
+
+                        # Make a local variable storing the time difference.
+                        set {_waited} to difference between {classability2-%player%} and now
+
+
+                        # Ability on cooldown.
+                        if {_waited} is smaller than a minute:
+                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 This ability is on cooldown for another %difference between a minute and {_waited}%&7!"
+                                stop
+                        # Run ability.
+                        else:
+                                send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You've used purify!"
+                                set {classability2-%player%} to now
+                                repair player's helmet by 25
+                                repair player's chestplate by 25
+                                repair player's leggings by 25
+                                repair player's boots by 25
+                                heal the player by 5
+                                remove blindness from player
+                                remove poison from player
+                                remove slowness from player
+
+
+                # Player is not wearing the right armour.
+                else:
+                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must use your class armour in order to use abilities!"
+
+
+        # If they don't have permission reply that they don't.
+        else:
+                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have this class and thus cannot use their ability."
+
+# Purified. Paladin's passive active for 5 seconds after purify.
+on damage:
+
+        # Check if the player has the permission node.
+        if victim has permission "skript.paladin":
+                victim is wearing all gold armour:
+
+                        # We're damage immune for 5 seconds
+                        if difference between {classability2-%victim%} and now is smaller than 5 seconds:
+                                cancel the event
+
+                                # Tell the players what happened
+                                send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You are pure and immune to damage!" to victim
+                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 Your target is purified and immune to damage!" to attacker
+
+# Resilience. Paladin's passive.
+on sprint toggle:
+
+        # Check for class and armour,
+        if player has permission "skript.paladin":
+                player is wearing all gold armour:
+                        if player does not have health boost:
+                                # Apply the effect
+                                apply Health Boost 5 to player for 999999 seconds
+                        stop
+
+                # The player has removed their armour and thus we shall remove their bonus.
+                remove Health Boost from player
