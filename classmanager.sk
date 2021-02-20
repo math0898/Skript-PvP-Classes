@@ -35,6 +35,27 @@ command /classcooldowns:
         trigger:
 
                 # Remove the class.
-                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your first ability was used %difference between now and {classability1-%player%}% ago!"
-                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your second ability was used %difference between now and {classability2-%player%}% ago!"
-                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your toggle is set to {classtoggle-%player%}!"
+                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your first ability was used %difference between now and {classability1.%player%}%&7 ago!"
+                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your second ability was used %difference between now and {classability2.%player%}%&7 ago!"
+                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your toggle is set to {classtoggle.%player%}&7!"
+
+# Leave all classes.
+command /classleaveall:
+        permission: skript.classes
+        trigger:
+
+                # Admin exception.
+                if group of player is "admin":
+                        make console execute command "lp user %player% permission set skript.assassin false"
+                        make console execute command "lp user %player% permission set skript.bard false"
+                        make console execute command "lp user %player% permission set skript.beserker false"
+                        make console execute command "lp user %player% permission set skript.paladin false"
+                        send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have left all classes!"
+                        stop
+
+                # Remove the classes.
+                make console execute command "lp user %player% permission unset skript.assassin"
+                make console execute command "lp user %player% permission unset skript.bard"
+                make console execute command "lp user %player% permission unset skript.beserker"
+                make console execute command "lp user %player% permission unset skript.paladin"
+                send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have left all classes!"

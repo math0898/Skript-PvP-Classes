@@ -11,28 +11,28 @@ on rightclick holding a golden shovel:
 
 
                         # Make a local variable storing the time difference.
-                        set {_waited} to difference between {classability1-%player%} and now
+                        set {_waited} to difference between {classability1.%player%} and now
 
 
                         # Ability on cooldown.
                         if {_waited} is smaller than 30 seconds:
-                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 This ability is on cooldown for another %difference between 30 seconds and {_waited}%&7!"
+                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 Mend is on cooldown for another %difference between 30 seconds and {_waited}%&7!"
                                 stop
                         # Run ability.
                         else:
                                 send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You've used mend!"
-                                set {classability1-%player%} to now
+                                set {classability1.%player%} to now
                                 apply Regeneration 1 to player for 15 seconds
 
 
                 # Player is not wearing the right armour.
                 else:
-                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must use your class armour in order to use abilities!"
+                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must wear full gold armour in order to use mend!"
 
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have this class and thus cannot use their ability."
+                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have paladin and thus cannot use mend."
 
 # Purify. Paladin's second ability.
 on leftclick holding a golden shovel:
@@ -45,17 +45,17 @@ on leftclick holding a golden shovel:
 
 
                         # Make a local variable storing the time difference.
-                        set {_waited} to difference between {classability2-%player%} and now
+                        set {_waited} to difference between {classability2.%player%} and now
 
 
                         # Ability on cooldown.
                         if {_waited} is smaller than a minute:
-                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 This ability is on cooldown for another %difference between a minute and {_waited}%&7!"
+                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 Purify is on cooldown for another %difference between a minute and {_waited}%&7!"
                                 stop
                         # Run ability.
                         else:
                                 send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You've used purify!"
-                                set {classability2-%player%} to now
+                                set {classability2.%player%} to now
                                 repair player's helmet by 25
                                 repair player's chestplate by 25
                                 repair player's leggings by 25
@@ -68,12 +68,12 @@ on leftclick holding a golden shovel:
 
                 # Player is not wearing the right armour.
                 else:
-                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must use your class armour in order to use abilities!"
+                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must use full gold armour in order to use purify!"
 
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have this class and thus cannot use their ability."
+                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have paladin and thus cannot use purify."
 
 # Purified. Paladin's passive active for 5 seconds after purify.
 on damage:
@@ -82,8 +82,15 @@ on damage:
         if victim has permission "skript.paladin":
                 victim is wearing all gold armour:
 
+                        # We're using this to increase the durability of gold armour.
+                        chance of 85%:
+                                repair victim's helmet by 1
+                                repair victim's chestplate by 1
+                                repair victim's leggings by 1
+                                repair victim's boots by 1
+
                         # We're damage immune for 5 seconds
-                        if difference between {classability2-%victim%} and now is smaller than 5 seconds:
+                        if difference between {classability2.%victim%} and now is smaller than 5 seconds:
                                 cancel the event
 
                                 # Tell the players what happened

@@ -4,42 +4,42 @@ on leftclick holding note block:
         # Check if the player has the class node.
         if player has permission "skript.bard":
 
-                set {_waited} to difference between {classability1-%player%} and now
+                set {_waited} to difference between {classability1.%player%} and now
 
                 # Check Cooldown.
                 if {_waited} is not smaller than 15 seconds:
 
                         # Error catching.
-                        if {classtoggle-%player%} does not exist:
-                                set {classtoggle-%player%} to 1
+                        if {classtoggle.%player%} does not exist:
+                                set {classtoggle.%player%} to 1
 
                         # Regen.
-                        if {classtoggle-%player%} is 1:
+                        if {classtoggle.%player%} is 1:
                                 remove regeneration from player
                                 apply regeneration 1 to player for 60 seconds
                                 send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &dregeneration&7!."
 
                         # Swiftness.
-                        else if {classtoggle-%player%} is 2:
+                        else if {classtoggle.%player%} is 2:
                                 remove swiftness from player
                                 apply swiftness 1 to player for 60 seconds
                                 send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &bswiftness&7!."
 
                         # Strength.
-                        else if {classtoggle-%player%} is 3:
+                        else if {classtoggle.%player%} is 3:
                                 remove strength from player
                                 apply strength 1 to player for 60 seconds
                                 send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &cstrength&7!."
 
-                        set {classability1-%player%} to now
+                        set {classability1.%player%} to now
 
                 # If its on cooldown tell them
                 else:
-                        send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 This ability is on cooldown for another %difference between 15 seconds and {_waited}%&7!"
+                        send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 Hym is on cooldown for another %difference between 15 seconds and {_waited}%&7!"
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 You do not have this class and thus cannot use their ability."
+                send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 You do not have bard cannot use hym."
 
 # Tempo Change. Bard class's second active.
 on rightclick holding note block:
@@ -48,27 +48,27 @@ on rightclick holding note block:
         if player has permission "skript.bard":
 
                 # Error catching.
-                if {classtoggle-%player%} does not exist:
-                        set {classtoggle-%player%} to 1
+                if {classtoggle.%player%} does not exist:
+                        set {classtoggle.%player%} to 1
 
                 # On Regen.
-                if {classtoggle-%player%} is 1:
-                        set {classtoggle-%player%} to 2
+                if {classtoggle.%player%} is 1:
+                        set {classtoggle.%player%} to 2
                         send "&8[&9Skript&8] [&dBard&8] [&b&lSwiftness&8]"
                         stop
 
                 # On Swiftness.
-                if {classtoggle-%player%} is 2:
-                        set {classtoggle-%player%} to 3
+                if {classtoggle.%player%} is 2:
+                        set {classtoggle.%player%} to 3
                         send "&8[&9Skript&8] [&dBard&8] [&c&lStrength&8]"
                         stop
 
                 # On Strength.
-                if {classtoggle-%player%} is 3:
-                        set {classtoggle-%player%} to 1
+                if {classtoggle.%player%} is 3:
+                        set {classtoggle.%player%} to 1
                         send "&8[&9Skript&8] [&dBard&8] [&d&lRegeneration&8]"
                         stop
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 You do not have this class and thus cannot use their ability."
+                send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 You do not have bard and thus cannot use tempo change."
