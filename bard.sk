@@ -7,7 +7,7 @@ on leftclick holding note block:
                 set {_waited} to difference between {classability1.%player%} and now
 
                 # Check Cooldown.
-                if {_waited} is not smaller than 15 seconds:
+                if {_waited} is not smaller than 30 seconds:
 
                         # Error catching.
                         if {classtoggle.%player%} does not exist:
@@ -16,19 +16,19 @@ on leftclick holding note block:
                         # Regen.
                         if {classtoggle.%player%} is 1:
                                 remove regeneration from player
-                                apply regeneration 1 to player for 60 seconds
+                                apply regeneration 1 to player for 45 seconds
                                 send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &dregeneration&7!."
 
                         # Swiftness.
                         else if {classtoggle.%player%} is 2:
                                 remove swiftness from player
-                                apply swiftness 1 to player for 60 seconds
+                                apply swiftness 1 to player for 45 seconds
                                 send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &bswiftness&7!."
 
                         # Strength.
                         else if {classtoggle.%player%} is 3:
                                 remove strength from player
-                                apply strength 1 to player for 60 seconds
+                                apply strength 1 to player for 45 seconds
                                 send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &cstrength&7!."
 
                         set {classability1.%player%} to now

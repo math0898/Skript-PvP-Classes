@@ -9,6 +9,10 @@ command /classjoin <text>:
 
                         # Check param is correct.
                         if arg-1 is "bard" or "assassin" or "beserker" or "paladin":
+                                if arg-1 is "bard" or "paladin":
+                                        make console execute command "lp user %player% permission set skript.classes.caster true"
+                                else:
+                                        make console execute command "lp user %player% permission set skript.classes.caster false"
                                 make console execute command "lp user %player% permission set skript.%arg-1% true"
                                 send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have joined %arg-1%!"
                         else:

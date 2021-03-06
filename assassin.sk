@@ -69,6 +69,9 @@ on damage:
                 if difference between {classability2.%attacker%} and now is smaller than 10 seconds:
 
                         # Apply the effects
+                        remove slowness from victim
+                        remove poison from victim
+                        remove blindness from victim
                         apply slowness 1 to victim for 4 seconds
                         apply poison 2 to victim for 4 seconds
                         apply blindness 1 to victim for 4 seconds
@@ -78,7 +81,10 @@ on damage:
                         send "&8[&9Skript&8] [&dAssassin&8] [&a&lSuccess&8]&7 You've poisoned your target!" to attacker
 
                 # Bonus damage for assassins.
-                damage victim by 0.5 hearts
+                if victim has permission "skript.classes.caster":
+                        damage victim by 1 hearts # Even more bonus vs. Casters.
+                else:
+                        damage victim by 0.5 hearts # vs. Non casters.
 
 # Swiftness. Assassin class's first passive.
 on sprint toggle:
@@ -115,6 +121,7 @@ on damage:
                                         # Tell the players what happened
                                         send "&8[&9Skript&8] [&dAssassin&8] [&a&lSuccess&8]&7 You've dodged the attack!" to victim
                                         send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 Your attack has been dodged!" to attacker
+                                heal victim by 1 # The assassin's agility negates some of the damage.
                         else:
                                 # The assassin's agility negates some of the damage.
                                 if attacker is of type player:
