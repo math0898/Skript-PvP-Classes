@@ -1,9 +1,82 @@
-# Built by Ser1618
+# --------------------------------------------------
+# |                                                |
+# |                Classes - Paladin               |
+# |                                                |
+# --------------------------------------------------
+#
+# This class concept and early implementation was completed by ser1618.
+#
+# Class description: Paladins focus on healing. What is the point of having good
+# armor if you cannot effectively heal? Paladins have a higher base health stat
+# then other classes and have a lot of healing baked into their kit. From
+# purifying themselves from debuffs, instantly healing themselves, and granting
+# damage immunity for 5 seconds. To more modest healing over time. The paladin's
+# strong magic requires a good conduit which is provided by a golden shovel and
+# full golden armor. Caster classification.
+#
+# This is basically the config section. To change a time enter it like <Number>
+# <Unit>. A few examples: 3 minutes, 15 seconds, 1 hour. To change damage, heal,
+# and chance values simply enter a number. A few examples: 50, 0.5, 1. To change
+# a true/false simply enter <true/false>. Examples:  true, false.
+
+options:
+
+        # General options
+        # Permission node
+        permission node : "skript.classes.paladin"
+        # Class item
+        class item : golden shovel
+
+        # Message Options
+        # TODO: Message frequency (None/Normal/Verbose). Players can also set
+        # their own. if they have not set one this one will be used.
+        message frequency : "normal"
+        # Classes prefix
+        classes prefix : &8[&9Skript&8]
+        # Class prefix
+        class prefix : &8[&dPaladin&8]
+        # Success
+        success : &8[&a&lSuccess&8]
+        # Warn
+        warn : &8[&6&lWarn&8]
+        # Message color
+        message color : &7
+
+        # Mend options
+        # Default is 30 seconds.
+        mend cooldown : 30 seconds
+        # Default is 15 seconds.
+        mend duration : 15 seconds
+        # Default is 1.
+        mend strength : 1
+
+        # Purify options
+        # Default is 60 seconds.
+        purify cooldown : 60 seconds
+        # Default is 5 seconds.
+        purify duration : 5 seconds
+        # Default is 5.
+        heal strength : 5
+
+        # Passive options
+        # Default is 5. What level of health boost should paladins always have?
+        buff strength : 5
+        # Default is 85. Chance armor doesn't lose durability.
+        armor resistance : 85
+
+
+# -----------------------------------------------------------------------------
+# Editing bellow this line may cause unintended effects. Please continue only if
+# you have sufficient general programming or scripting experience. For those not
+# experienced in Skript... its kind of odd so maybe this website can help...
+# http://en.njol.ch/projects/skript/doc/variables
+
+
 # Mend. Paladin's first active.
-on rightclick holding a golden shovel:
+on rightclick holding a {@class item}:
 
         # Check if the player has the class node.
-        if player has permission "skript.paladin":
+        if player has permission {@permission node}:
 
 
                 # Check if the player is wearing the armour
@@ -15,30 +88,30 @@ on rightclick holding a golden shovel:
 
 
                         # Ability on cooldown.
-                        if {_waited} is smaller than 30 seconds:
-                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 Mend is on cooldown for another %difference between 30 seconds and {_waited}%&7!"
+                        if {_waited} is smaller than {@mend cooldown}:
+                                send "{@classes prefix} {@class prefix} {@warn}{@message color} Mend is on cooldown for another %difference between {@mend cooldown} and {_waited}%{@message color}!"
                                 stop
                         # Run ability.
                         else:
-                                send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You've used mend!"
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've used mend!"
                                 set {classability1.%player%} to now
-                                apply Regeneration 1 to player for 15 seconds
+                                apply Regeneration {@mend strength} to player for {@mend duration}
 
 
                 # Player is not wearing the right armour.
                 else:
-                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must wear full gold armour in order to use mend!"
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You must wear full gold armour in order to use mend!"
 
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have paladin and thus cannot use mend."
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have paladin and thus cannot use mend."
 
 # Purify. Paladin's second ability.
-on leftclick holding a golden shovel:
+on leftclick holding a {@class item}:
 
         # Check for permission node
-        if player has permission "skript.paladin":
+        if player has permission {@permission node}:
 
                 # Check if player is wearing armour.
                 player is wearing all gold armour:
@@ -49,18 +122,14 @@ on leftclick holding a golden shovel:
 
 
                         # Ability on cooldown.
-                        if {_waited} is smaller than a minute:
-                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 Purify is on cooldown for another %difference between a minute and {_waited}%&7!"
+                        if {_waited} is smaller than {@purify cooldown}:
+                                send "{@classes prefix} {@class prefix} {@warn}{@message color} Purify is on cooldown for another %difference between {@purify cooldown} and {_waited}%{@message color}!"
                                 stop
                         # Run ability.
                         else:
-                                send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You've used purify!"
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've used purify!"
                                 set {classability2.%player%} to now
-                                repair player's helmet by 25
-                                repair player's chestplate by 25
-                                repair player's leggings by 25
-                                repair player's boots by 25
-                                heal the player by 5
+                                heal the player by {@heal strength}
                                 remove blindness from player
                                 remove poison from player
                                 remove slowness from player
@@ -68,44 +137,44 @@ on leftclick holding a golden shovel:
 
                 # Player is not wearing the right armour.
                 else:
-                        send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You must use full gold armour in order to use purify!"
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You must use full gold armour in order to use purify!"
 
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 You do not have paladin and thus cannot use purify."
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have paladin and thus cannot use purify."
 
 # Purified. Paladin's passive active for 5 seconds after purify.
 on damage:
 
         # Check if the player has the permission node.
-        if victim has permission "skript.paladin":
+        if victim has permission {@permission node}:
                 victim is wearing all gold armour:
 
                         # We're using this to increase the durability of gold armour.
-                        chance of 85%:
+                        chance of {@armor resistance}%:
                                 repair victim's helmet by 1
                                 repair victim's chestplate by 1
                                 repair victim's leggings by 1
                                 repair victim's boots by 1
 
-                        # We're damage immune for 5 seconds
-                        if difference between {classability2.%victim%} and now is smaller than 5 seconds:
+                        # We're damage immune for {@purify duration}
+                        if difference between {classability2.%victim%} and now is smaller than {@purify duration}:
                                 cancel the event
 
                                 # Tell the players what happened
-                                send "&8[&9Skript&8] [&dPaladin&8] [&a&lSuccess&8]&7 You are pure and immune to damage!" to victim
-                                send "&8[&9Skript&8] [&dPaladin&8] [&6&lWarn&8]&7 Your target is purified and immune to damage!" to attacker
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You are pure and immune to damage!" to victim
+                                send "{@classes prefix} {@class prefix} {@warn}{@message color} Your target is purified and immune to damage!" to attacker
 
 # Resilience. Paladin's passive.
 on sprint toggle:
 
         # Check for class and armour,
-        if player has permission "skript.paladin":
+        if player has permission {@permission node}:
                 player is wearing all gold armour:
                         if player does not have health boost:
                                 # Apply the effect
-                                apply Health Boost 5 to player for 999999 seconds
+                                apply Health Boost {@buff strength} to player for 999999 seconds
                         stop
 
                 # The player has removed their armour and thus we shall remove their bonus.

@@ -1,8 +1,90 @@
-# Invisibility. Assassin class's first active.
-on rightclick holding a ghast tear:
+# --------------------------------------------------
+# |                                                |
+# |                Classes - Assassin              |
+# |                                                |
+# --------------------------------------------------
+# Class description: Strike your foes with a powerful poison and watch them fall
+# to your shield piercing attacks. Use your evasion reduces the damage you take
+# from enemies and dodge their attacks with your stealth. Assassins need to be
+# flexible and thus your armor of choice is full leather. Ghast tears make the
+# most effective poison and camouflage. Fighter classification.
+#
+# This is basically the config section. To change a time enter it like <Number>
+# <Unit>. A few examples: 3 minutes, 15 seconds, 1 hour. To change damage, heal,
+# and chance values simply enter a number. A few examples: 50, 0.5, 1. To change
+# a true/false simply enter <true/false>. Examples:  true, false.
+
+options:
+
+        # General options
+        # Permission node
+        permission node : "skript.classes.assassin"
+        # Class item
+        class item : ghast tear
+
+        # Message Options
+        # TODO: Message frequency (None/Normal/Verbose). Players can also set
+        # their own. if they have not set one this one will be used.
+        message frequency : "normal"
+        # Classes prefix
+        classes prefix : &8[&9Skript&8]
+        # Class prefix
+        class prefix : &8[&dAssassin&8]
+        # Success
+        success : &8[&a&lSuccess&8]
+        # Warn
+        warn : &8[&6&lWarn&8]
+        # Message color
+        message color : &7
+
+        # Invisibility options
+        # Default is 30 seconds.
+        invisibility cooldown : 30 seconds
+        # Default is 10 seconds.
+        invisibility duration : 10 seconds
+        # Default is 50. Read as a 50% to dodge.
+        dodge chance : 50
+        # Default is true. Should assassins keep their damage reduction bonus?
+        invisibility damage reduction : true
+
+        # Poisoned blade options
+        # Default is 60 seconds.
+        poisoned blade cooldown : 60 seconds
+        # Default is 10 seconds.
+        poisoned blade duration : 10 seconds
+        # Default is 4 seconds.
+        debuff duration : 4 seconds
+        # Default is 1.
+        slowness strength : 1
+        # Default is 2.
+        poison strength : 2
+
+        # Passive options
+        # Default is 0.5. Bonus damage to be applied to non-casters.
+        damage all : 0.5
+        # Default is 1. Bonus damage to be applied to casters.
+        damage casters : 1
+        # Default is 1. What level of swiftness should assassins always have?
+        buff strength : 1
+        # Default is 1. How much should the assassin heal on getting hit to
+        # increase their survivability.
+        damage reduction : 1
+        # Default is 75. Chance armor doesn't lose durability.
+        armor resistance : 75
+
+
+# -----------------------------------------------------------------------------
+# Editing bellow this line may cause unintended effects. Please continue only if
+# you have sufficient general programming or scripting experience. For those not
+# experienced in Skript... its kind of odd so maybe this website can help...
+# http://en.njol.ch/projects/skript/doc/variables
+
+
+# Invisibility. The assassin class's first active.
+on rightclick holding a {@class item}:
 
         # Check if the player has the class node.
-        if player has permission "skript.assassin":
+        if player has permission {@permission node}:
 
                 # Check if the player is wearing the armour
                 player is wearing all leather armour:
@@ -11,28 +93,28 @@ on rightclick holding a ghast tear:
                         set {_waited} to difference between {classability1.%player%} and now
 
                         # Ability on cooldown.
-                        if {_waited} is smaller than 30 seconds:
-                                send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 Invisibility is on cooldown for another %difference between 30 seconds and {_waited}%&7!"
+                        if {_waited} is smaller than {@invisibility cooldown}:
+                                send "{@classes prefix} {@class prefix} {@warn}{@message color} Invisibility is on cooldown for another %difference between {@invisibility cooldown} and {_waited}%{@message color}!"
                                 stop
                         # Run ability.
                         else:
-                                send "&8[&9Skript&8] [&dAssassin&8] [&a&lSuccess&8]&7 You've used invisibility!"
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've used invisibility!"
                                 set {classability1.%player%} to now
-                                apply invisibility 1 to player for 10 seconds
+                                apply invisibility 1 to player for {@invisibility duration}
 
                 # Player is not wearing the right armour.
                 else:
-                        send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 You must wear full leather armour in order to use invisibility!"
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You must wear full leather armour in order to use invisibility!"
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 You do not have assassin and thus cannot use invisibility."
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have assassin and thus cannot use invisibility."
 
 # Poisoned Blade. Assassin class's second active.
-on leftclick holding a ghast tear:
+on leftclick holding a {@class item}:
 
         # Check if the player has the class node.
-        if player has permission "skript.assassin":
+        if player has permission {@permission node}:
 
                 # Check if the player is wearing the armour.
                 player is wearing all leather armour:
@@ -41,59 +123,59 @@ on leftclick holding a ghast tear:
                         set {_waited} to difference between {classability2.%player%} and now
 
                         # Ability on cooldown.
-                        if {_waited} is smaller than a minute:
-                                send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 Poisoned blade is on cooldown for another %difference between a minute and {_waited}%&7!"
+                        if {_waited} is smaller than {@poisoned blade cooldown}:
+                                send "{@classes prefix} {@class prefix} {@warn}{@message color} Poisoned blade is on cooldown for another %difference between {@poisoned blade cooldown} and {_waited}%{@message color}!"
                                 stop
 
                         # Run ability.
                         else:
-                                send "&8[&9Skript&8] [&dAssassin&8] [&a&lSuccess&8]&7 You've used poisoned blade!"
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've used poisoned blade!"
                                 set {classability2.%player%} to now
                                 stop
 
                 # Tell the player if they're not wearing the armour.
                 else:
-                        send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 You must wear full leather armour in order to use poisoned blade!"
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You must wear full leather armour in order to use poisoned blade!"
 
         # Tell the player if they don't have the node.
         else:
-                send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 You do not have assassin and thus cannot use poisoned blade."
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have assassin and thus cannot use poisoned blade."
 
 # Poisoned Blade's Passive Effect. Assassin class's second active.
 on damage:
 
         # Check if the player has the class node.
-        if attacker has permission "skript.assassin":
+        if attacker has permission {@permission node}:
 
                 # Check time passed since ability use.
-                if difference between {classability2.%attacker%} and now is smaller than 10 seconds:
+                if difference between {classability2.%attacker%} and now is smaller than {@poisoned blade duration}:
 
                         # Apply the effects
                         remove slowness from victim
                         remove poison from victim
                         remove blindness from victim
-                        apply slowness 1 to victim for 4 seconds
-                        apply poison 2 to victim for 4 seconds
-                        apply blindness 1 to victim for 4 seconds
+                        apply slowness {@slowness strength} to victim for {@debuff duration}
+                        apply poison {@poison strength} to victim for {@debuff duration}
+                        apply blindness 1 to victim for {@debuff duration}
 
                         # Let the victim and attacker know what's going on.
-                        send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 You've been poisoned!" to victim
-                        send "&8[&9Skript&8] [&dAssassin&8] [&a&lSuccess&8]&7 You've poisoned your target!" to attacker
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You've been poisoned!" to victim
+                        send "{@classes prefix} {@class prefix} {@success}{@message color} You've poisoned your target!" to attacker
 
                 # Bonus damage for assassins.
                 if victim has permission "skript.classes.caster":
-                        damage victim by 1 hearts # Even more bonus vs. Casters.
+                        damage victim by {@damage casters} hearts # Even more bonus vs. Casters.
                 else:
-                        damage victim by 0.5 hearts # vs. Non casters.
+                        damage victim by {@damage all} hearts # vs. Non casters.
 
 # Swiftness. Assassin class's first passive.
 on sprint toggle:
 
        # Check for class and armour
-       if player has permission "skript.assassin":
+       if player has permission {@permission node}:
               player is wearing all leather armour:
                      # Apply the effect
-                     apply swiftness 1 to player for 999999 seconds
+                     apply swiftness {@buff strength} to player for 999999 seconds
                      stop
 
               # The player has removed their armour and thus we shall remove their bonus.
@@ -102,27 +184,29 @@ on sprint toggle:
 # Agility. Assassin class's second passive.
 on damage:
 
-        # Check if the player has the permission node.
-        if victim has permission "skript.assassin":
+        # Check if the player has the permission.
+        if victim has permission {@permission node}:
                 victim is wearing all leather armour:
 
                         # We're going to increase the durability of leather armour here
-                        chance of 75%:
+                        chance of {@armor resistance}%:
                                 repair victim's helmet by 1
                                 repair victim's chestplate by 1
                                 repair victim's leggings by 1
                                 repair victim's boots by 1
 
                         # Not the implementation I'd like! But it should work
-                        if difference between {classability1.%victim%} and now is smaller than 10 seconds:
-                                chance of 50%:
+                        if difference between {classability1.%victim%} and now is smaller than {@invisibility duration}:
+                                chance of {@dodge chance}%:
                                         cancel the event
 
                                         # Tell the players what happened
-                                        send "&8[&9Skript&8] [&dAssassin&8] [&a&lSuccess&8]&7 You've dodged the attack!" to victim
-                                        send "&8[&9Skript&8] [&dAssassin&8] [&6&lWarn&8]&7 Your attack has been dodged!" to attacker
-                                heal victim by 1 # The assassin's agility negates some of the damage.
+                                        send "{@classes prefix} {@class prefix} {@success}{@message color} You've dodged the attack!" to victim
+                                        send "{@classes prefix} {@class prefix} {@warn}{@message color} Your attack has been dodged!" to attacker
+
+                                if {@invisibility damage reduction}:
+                                        heal victim by {@damage reduction} # The assassin's agility negates some of the damage.
                         else:
                                 # The assassin's agility negates some of the damage.
                                 if attacker is of type player:
-                                        heal victim by 1
+                                        heal victim by {@damage reduction}

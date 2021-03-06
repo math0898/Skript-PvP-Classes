@@ -1,0 +1,175 @@
+# --------------------------------------------------
+# |                                                |
+# |                Classes - Berserker             |
+# |                                                |
+# --------------------------------------------------
+# Class description: What better weapon can there be than the axe? Using the axe
+# the berserker deals ridiculous amounts of damage and can one shot unarmored
+# foes. Using rotten flesh the berserker can call forth a burst of speed or a
+# rage to inflict mortal wounds on even the strongest of foes. Berserkers need
+# some room to breath and so use leather leggings and chestplates, there are no
+# requirements for their other armor pieces. Fighter classification.
+#
+# This is basically the config section. To change a time enter it like <Number>
+# <Unit>. A few examples: 3 minutes, 15 seconds, 1 hour. To change damage, heal,
+# and chance values simply enter a number. A few examples: 50, 0.5, 1. To change
+# a true/false simply enter <true/false>. Examples:  true, false.
+
+options:
+
+        # General options
+        # Permission node
+        permission node : "skript.classes.berserker"
+        # Class item
+        class item : rotten flesh
+
+        # Message Options
+        # TODO: Message frequency (None/Normal/Verbose). Players can also set
+        # their own. if they have not set one this one will be used.
+        message frequency : "normal"
+        # Classes prefix
+        classes prefix : &8[&9Skript&8]
+        # Class prefix
+        class prefix : &8[&dBerserker&8]
+        # Success
+        success : &8[&a&lSuccess&8]
+        # Warn
+        warn : &8[&6&lWarn&8]
+        # Message color
+        message color : &7
+
+        # Haste options
+        # Default is 30 seconds.
+        haste cooldown : 30 seconds
+        # Default is 10 seconds.
+        haste duration : 10 seconds
+        # Default is 2.
+        swiftness strength : 2
+
+        # Rage options
+        # Default is 60 seconds.
+        rage cooldown : 60 seconds
+        # Default is 10 seconds.
+        rage duration : 10 seconds
+        # Default is 2.
+        strength strength : 2
+
+        # Passive options
+        # Default is 0.5. Bonus damage to be applied to non-casters.
+        damage all : 1
+        # Default is 1. Bonus damage to be applied to casters.
+        damage casters : 2
+        # Default is 1. What level of resistance should berserkers always have?
+        buff strength : 1
+        # Default is 75. Chance armor doesn't lose durability.
+        armor resistance : 75
+
+
+# -----------------------------------------------------------------------------
+# Editing bellow this line may cause unintended effects. Please continue only if
+# you have sufficient general programming or scripting experience. For those not
+# experienced in Skript... its kind of odd so maybe this website can help...
+# http://en.njol.ch/projects/skript/doc/variables
+
+
+# Haste. Berserker class's first active.
+on rightclick holding a {@class item}:
+
+        # Check if the player has the class node.
+        if player has permission {@permission node}:
+
+                # Check if the player is wearing the armour
+                player is wearing a leather leggings and leather chestplate:
+
+                        # Make a local variable storing the time difference.
+                        set {_waited} to difference between {classability1.%player%} and now
+
+                        # Ability on cooldown.
+                        if {_waited} is smaller than {@haste cooldown}:
+                                send "{@classes prefix} {@class prefix} {@warn}{@message color} Haste is on cooldown for another %difference between {@haste cooldown} and {_waited}%{@message color}!"
+                                stop
+                        # Run ability.
+                        else:
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've used haste!"
+                                set {classability1.%player%} to now
+                                apply speed {@swiftness strength} to player for {@haste duration}
+
+                # Player is not wearing the right armour.
+                else:
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You must use a leather chestplate and leggings in order to use haste!"
+
+        # If they don't have permission reply that they don't.
+        else:
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have berserker and thus cannot use haste."
+
+# Rage. Berserker class's second active.
+on leftclick holding {@class item}:
+
+        # Check if the player has the class node.
+        if player has permission {@permission node}:
+
+                # Check if the player is wearing the armour.
+                player is wearing a leather leggings and leather chestplate:
+
+                        # Make a local variable storing the time difference.
+                        set {_waited} to difference between {classability2.%player%} and now
+
+                        # Ability on cooldown.
+                        if {_waited} is smaller than {@rage cooldown}:
+                                send "{@classes prefix} {@class prefix} {@warn}{@message color} Rage is on cooldown for another %difference between {@rage cooldown} and {_waited}%{@message color}!"
+                                stop
+
+                        # Run ability.
+                        else:
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've used rage!"
+                                apply strength {@strength strength} to player for {@rage duration} seconds
+                                set {classability2.%player%} to now
+
+                # Tell the player if they're not wearing the armour.
+                else:
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You must use a leather chestplate and leggings in order to use rage!"
+
+        # Tell them if they don't have the class node.
+        else:
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have berserker and thus cannot use rage."
+
+# Undying. Berserker class's first passive.
+on sprint toggle:
+
+       # Check for class and armour
+       if player has permission {@permission node}:
+              player is wearing a leather leggings and leather chestplate:
+                     # Apply the effect
+                     apply resistance {@buff strength} to player for 999999 seconds
+                     stop
+
+              # The player has removed their armour and thus we shall remove their bonus.
+              remove resistance from player
+
+# Axe Rule. Berserkers can only deal damage with axe.
+on damage:
+
+       # Check if player is a berserker
+       if attacker has permission {@permission node}:
+
+              attacker is holding any axe:
+                     if victim has permission "skript.classes.caster":
+                            damage victim by {@damage casters} hearts
+                     else:
+                            damage victim by {@damage all} hearts
+                     if {@message frequency} is "Verbose":
+                            send "{@classes prefix} {@class prefix} {@warn}{@message color} You take additional damage from the axe wielding berserker!" to victim
+                     stop
+
+              cancel event
+              send "{@classes prefix} {@class prefix} {@warn}{@message color} As a berserker you can only deal damage with axes!" to attacker
+              send "{@classes prefix} {@class prefix} {@success}{@message color} As your attacker is not using an axe you take no damage." to victim
+
+# Armour Durability. Berserkers need leather to last longer.
+on damage:
+
+        # Check if the player is a berserker
+        if victim has permission {@permission node}:
+                chance of {@armor resistance}%:
+                        repair victim's chestplate by 1
+                        repair victim's leggings by 1

@@ -1,74 +1,143 @@
+# --------------------------------------------------
+# |                                                |
+# |                Classes - Bard                  |
+# |                                                |
+# --------------------------------------------------
+# Class description: Buff yourself with your hyms. Using the note block you can
+# play a number of songs which improve your strength, hasten your step, and
+# increase your regeneration. Bards are flexible allowing them to wear any armor.
+# Be aware however, your years of studying magical hyms shows on the strength of
+# your bones and muscles. Caster classification.
+#
+# This is basically the config section. To change a time enter it like <Number>
+# <Unit>. A few examples: 3 minutes, 15 seconds, 1 hour. To change damage, heal,
+# and chance values simply enter a number. A few examples: 50, 0.5, 1. To change
+# a true/false simply enter <true/false>. Examples:  true, false.
+
+options:
+
+        # General options
+        # Permission node
+        permission node : "skript.classes.bard"
+        # Class item
+        class item : note block
+
+        # Message Options
+        # TODO: Message frequency (None/Normal/Verbose). Players can also set
+        # their own. if they have not set one this one will be used.
+        message frequency : "normal"
+        # Classes prefix
+        classes prefix : &8[&9Skript&8]
+        # Class prefix
+        class prefix : &8[&dBard&8]
+        # Success
+        success : &8[&a&lSuccess&8]
+        # Warn
+        warn : &8[&6&lWarn&8]
+        # Message color
+        message color : &7
+        # Regeneration format
+        regen : &dregeneration
+        # Swiftness format
+        swiftness : &bswiftness
+        # Strength format
+        strength : &cstrength
+
+        # Hym options
+        # Buff duration
+        buff duration : 45 seconds
+        # Buff cooldown
+        buff cooldown : 30 seconds
+        # Swiftness strength
+        swiftness strength : 1
+        # Regeneration strength
+        regen strength : 1
+        # Strength strength
+        strength strength : 1
+
+
+# -----------------------------------------------------------------------------
+# Editing bellow this line may cause unintended effects. Please continue only if
+# you have sufficient general programming or scripting experience. For those not
+# experienced in Skript... its kind of odd so maybe this website can help...
+# http://en.njol.ch/projects/skript/doc/variables
+
+
 # Hym. Bard class's first active.
-on leftclick holding note block:
+on leftclick holding {@class item}:
 
         # Check if the player has the class node.
-        if player has permission "skript.bard":
+        if player has permission {@permission node}:
 
                 set {_waited} to difference between {classability1.%player%} and now
 
                 # Check Cooldown.
-                if {_waited} is not smaller than 30 seconds:
+                if {_waited} is not smaller than {@buff cooldown}:
 
                         # Error catching.
                         if {classtoggle.%player%} does not exist:
+                                set {classtoggle.%player%} to 1
+                        if  {classtoggle.%player%} is 0:
                                 set {classtoggle.%player%} to 1
 
                         # Regen.
                         if {classtoggle.%player%} is 1:
                                 remove regeneration from player
-                                apply regeneration 1 to player for 45 seconds
-                                send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &dregeneration&7!."
+                                apply regeneration {@regen strength} to player for {@buff duration} seconds
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've applied {@regen}{@message color}!."
 
                         # Swiftness.
                         else if {classtoggle.%player%} is 2:
                                 remove swiftness from player
-                                apply swiftness 1 to player for 45 seconds
-                                send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &bswiftness&7!."
+                                apply swiftness {@swiftness strength} to player for {@buff duration} seconds
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've applied &bswiftness{@message color}!."
 
                         # Strength.
                         else if {classtoggle.%player%} is 3:
                                 remove strength from player
-                                apply strength 1 to player for 45 seconds
-                                send "&8[&9Skript&8] [&dBard&8] [&a&lSuccess&8]&7 You've applied &cstrength&7!."
+                                apply strength {@strength strength} to player for {@buff duration} seconds
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} You've applied &cstrength{@message color}!."
 
                         set {classability1.%player%} to now
 
                 # If its on cooldown tell them
                 else:
-                        send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 Hym is on cooldown for another %difference between 15 seconds and {_waited}%&7!"
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} Hym is on cooldown for another %difference between 15 seconds and {_waited}%{@message color}!"
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 You do not have bard cannot use hym."
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have bard cannot use hym."
 
 # Tempo Change. Bard class's second active.
-on rightclick holding note block:
+on rightclick holding {@class item}:
 
         # Check if the player has the class node.
-        if player has permission "skript.bard":
+        if player has permission {@permission node}:
 
                 # Error catching.
                 if {classtoggle.%player%} does not exist:
+                        set {classtoggle.%player%} to 1
+                if  {classtoggle.%player%} is 0:
                         set {classtoggle.%player%} to 1
 
                 # On Regen.
                 if {classtoggle.%player%} is 1:
                         set {classtoggle.%player%} to 2
-                        send "&8[&9Skript&8] [&dBard&8] [&b&lSwiftness&8]"
+                        send "{@classes prefix} {@class prefix} [&b&lSwiftness&8]"
                         stop
 
                 # On Swiftness.
                 if {classtoggle.%player%} is 2:
                         set {classtoggle.%player%} to 3
-                        send "&8[&9Skript&8] [&dBard&8] [&c&lStrength&8]"
+                        send "{@classes prefix} {@class prefix} [&c&lStrength&8]"
                         stop
 
                 # On Strength.
                 if {classtoggle.%player%} is 3:
                         set {classtoggle.%player%} to 1
-                        send "&8[&9Skript&8] [&dBard&8] [&d&lRegeneration&8]"
+                        send "{@classes prefix} {@class prefix} [&d&lRegeneration&8]"
                         stop
 
         # If they don't have permission reply that they don't.
         else:
-                send "&8[&9Skript&8] [&dBard&8] [&6&lWarn&8]&7 You do not have bard and thus cannot use tempo change."
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have bard and thus cannot use tempo change."

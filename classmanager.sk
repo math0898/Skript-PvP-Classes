@@ -1,65 +1,139 @@
+# --------------------------------------------------
+# |                                                |
+# |                Classes - Manager               |
+# |                                                |
+# --------------------------------------------------
+# Description: This file handles the joining and leaving of classes. It assumes
+# lp perms are being used and permissions can be set directly on the players.
+# Players can use /classjoin <name> to join a class, /classleaveall to leave all
+# classes, and /classleave <name> to leave a specific class.
+#
+# This is basically the config section. To change a time enter it like <Number>
+# <Unit>. A few examples: 3 minutes, 15 seconds, 1 hour. To change damage, heal,
+# and chance values simply enter a number. A few examples: 50, 0.5, 1. To change
+# a true/false simply enter <true/false>. Examples:  true, false.
+
+options:
+
+        # Permission nodes
+        classes manager admin node : "skript.classes.adminmanage" # TODO
+        classes manager node : "skript.classes.selfmanage"
+        assassin node : "skript.classes.assassin"
+        bard node : "skript.classes.bard"
+        berserker node : "skript.classes.berserker"
+        paladin node : "skript.classes.paladin"
+        caster node : "skript.classes.caster"
+        fighter node : "skript.classes.fighter"
+
+        # Message options
+        # TODO: Message frequency (None/Normal/Verbose). Players can also set
+        # their own. if they have not set one this one will be used.
+        message frequency : "normal"
+        # Classes prefix
+        classes prefix : &8[&9Skript&8]
+        # Manager prefix
+        manager prefix : &8[&dClasses&8]
+        # Success
+        success : &8[&a&lSuccess&8]
+        # Warn
+        warn : &8[&6&lWarn&8]
+        # Message color
+        message color : &7
+
+        # Enabled/Disabled classes
+        assassin : true
+        bard : true
+        berserker : true
+        paladin : true
+
+
+# -----------------------------------------------------------------------------
+# Editing bellow this line may cause unintended effects. Please continue only if
+# you have sufficient general programming or scripting experience. For those not
+# experienced in Skript... its kind of odd so maybe this website can help...
+# http://en.njol.ch/projects/skript/doc/variables
+
+
 # Join a class.
 command /classjoin <text>:
-        permission: skript.classes
+        permission: {@classes manager node}
         trigger:
-                # Check if the player is already in a class.
-                if player has permission "skript.assassin" or "skript.bard" or "skript.beserker" or "skript.paladin":
-                        send "&8[&9Skript&8] [&dClasses&8] [&6&lWarn&8]&7 You must leave your current pvp class to join another pvp class."
+                if player has permission {@assassin node} or {@bard node} or {@berserker node} or {@paladin node}:
+                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} You must leave your current class to join a new one!"
                 else:
-
-                        # Check param is correct.
-                        if arg-1 is "bard" or "assassin" or "beserker" or "paladin":
-                                if arg-1 is "bard" or "paladin":
-                                        make console execute command "lp user %player% permission set skript.classes.caster true"
+                        if %arg-1% is "assassin":
+                                if {@assassin}:
+                                        make console execute command "lp user %player% permission set {@assassin node}"
+                                        make console execute command "lp user %player% permission set {@fighter node}"
+                                        send "{@classes prefix} {@manager prefix} {@success}{@message color} You have joined the assassin class!"
                                 else:
-                                        make console execute command "lp user %player% permission set skript.classes.caster false"
-                                make console execute command "lp user %player% permission set skript.%arg-1% true"
-                                send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have joined %arg-1%!"
+                                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} Assassin is currently disabled."
+                        else if %arg-1% is "bard":
+                                if {@bard}:
+                                        make console execute command "lp user %player% permission set {@bard node}"
+                                        make console execute command "lp user %player% permission set {@caster node}"
+                                        send "{@classes prefix} {@manager prefix} {@success}{@message color} You have joined the bard class!"
+                                else:
+                                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} Bard is currently disabled."
+                        else if %arg-1% is "berserker":
+                                if {@berserker}:
+                                        make console execute command "lp user %player% permission set {@berserker node}"
+                                        make console execute command "lp user %player% permission set {@fighter node}"
+                                        send "{@classes prefix} {@manager prefix} {@success}{@message color} You have joined the berserker class!"
+                                else:
+                                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} Berserker is currently disabled."
+                        else if %arg-1% is "paladin":
+                                if {@paladin}:
+                                        make console execute command "lp user %player% permission set {@paladin node}"
+                                        make console execute command "lp user %player% permission set {@caster node}"
+                                        send "{@classes prefix} {@manager prefix} {@success}{@message color} You have joined the paladin class!"
+                                else:
+                                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} Paladin is currently disabled."
                         else:
-                                send "&8[&9Skript&8] [&dClasses&8] [&6&lWarn&8]&7 Current valid classes are bard, assassin, paladin, and beserker."
-
+                                send "{@classes prefix} {@manager prefix} {@warn}{@message color} %arg-1% {@message color}is not a recognized class. Currently enabled classes are:"
+                                if {@assassin}:
+                                        send "{@message color}- assassin"
+                                if {@bard}:
+                                        send "{@message color}- bard"
+                                if {@berserker}:
+                                        send "{@message color}- berserker"
+                                if {@paladin}:
+                                        send "{@message color}- paladin"
 # Leave a class.
 command /classleave <text>:
-        permission: skript.classes
+        permission: {@classes manager node}
         trigger:
-
-                # Admin exception.
-                if group of player is "admin":
-                        make console execute command "lp user %player% permission set skript.%arg-1% false"
-                        send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have left %arg-1%!"
-                        stop
-
-                # Remove the class.
-                make console execute command "lp user %player% permission unset skript.%arg-1%"
-                send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have left %arg-1%!"
-
-# Check your cooldowns.
-command /classcooldowns:
-        permission: skript.classes
-        trigger:
-
-                # Remove the class.
-                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your first ability was used %difference between now and {classability1.%player%}%&7 ago!"
-                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your second ability was used %difference between now and {classability2.%player%}%&7 ago!"
-                send "&8[&9Skript&8] [&dClasses&8] [&6&lDev&8]&7 Your toggle is set to {classtoggle.%player%}&7!"
+                if %arg-1% is "assassin" or "bard" or "berserker" or "paladin":
+                        make console execute command "lp user %player% permission set {@caster node} false"
+                        make console execute command "lp user %player% permission set {@fighter node} false"
+                        if %arg-1% is "assassin":
+                                make console execute command "lp user %player% permission set {@assassin node} false"
+                        else if %arg-1% is "bard":
+                                make console execute command "lp user %player% permission set {@bard node} false"
+                        else if %arg-1% is "berserker":
+                                make console execute command "lp user %player% permission set {@berserker node} false"
+                        else if %arg-1% is "paladin":
+                                make console execute command "lp user %player% permission set {@paladin node} false"
+                        send "{@classes prefix} {@manager prefix} {@success}{@message color} You have left %arg-1%{@message color}!"
+                else:
+                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} %arg-1% {@message color}is not a valid class. Valid classes are:"
+                        if {@assassin}:
+                                send "{@message color}- assassin"
+                        if {@bard}:
+                                send "{@message color}- bard"
+                        if {@berserker}:
+                                send "{@message color}- berserker"
+                        if {@paladin}:
+                                send "{@message color}- paladin"
 
 # Leave all classes.
 command /classleaveall:
-        permission: skript.classes
+        permission: {@classes manager node}
         trigger:
-
-                # Admin exception.
-                if group of player is "admin":
-                        make console execute command "lp user %player% permission set skript.assassin false"
-                        make console execute command "lp user %player% permission set skript.bard false"
-                        make console execute command "lp user %player% permission set skript.beserker false"
-                        make console execute command "lp user %player% permission set skript.paladin false"
-                        send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have left all classes!"
-                        stop
-
-                # Remove the classes.
-                make console execute command "lp user %player% permission unset skript.assassin"
-                make console execute command "lp user %player% permission unset skript.bard"
-                make console execute command "lp user %player% permission unset skript.beserker"
-                make console execute command "lp user %player% permission unset skript.paladin"
-                send "&8[&9Skript&8] [&dClasses&8] [&a&lSuccess&8]&7 You have left all classes!"
+                make console execute command "lp user %player% permission set {@caster node} false"
+                make console execute command "lp user %player% permission set {@fighter node} false"
+                make console execute command "lp user %player% permission set {@assassin node} false"
+                make console execute command "lp user %player% permission set {@bard node} false"
+                make console execute command "lp user %player% permission set {@berserker node} false"
+                make console execute command "lp user %player% permission set {@paladin node} false"
+                send "{@classes prefix} {@manager prefix} {@success}{@message color} You have left all classes!"
