@@ -1,0 +1,165 @@
+# --------------------------------------------------
+# |                                                |
+# |                Classes - Pyromancer            |
+# |                                                |
+# --------------------------------------------------
+# Class description: Burn your enemies, resurrect from the flames of the phoenix
+# and watch your foes crumble before your raw unchanneled power. The pyromancer
+# casts fireball barrages and single fire ball attacks from afar using the power
+# of the blaze as a conduit. If a conflict were to turn into a melee pyromancers
+# can call on the power of the phoenix to heal them and resurrect once from
+# death. The pyromancer has no armor requirements. Caster classification.
+#
+# This is basically the config section. To change a time enter it like <Number>
+# <Unit>. A few examples: 3 minutes, 15 seconds, 1 hour. To change damage, heal,
+# and chance values simply enter a number. A few examples: 50, 0.5, 1. To change
+# a true/false simply enter <true/false>. Examples:  true, false.
+
+options:
+
+        # General options
+        # Permission node
+        permission node : "skript.classes.pyromancer"
+        # Class items
+        single fire : blaze powder
+        barrage fire : blaze rod
+        renewal : magma cream
+
+        # Message Options
+        # TODO: Message frequency (None/Normal/Verbose). Players can also set
+        # their own. if they have not set one this one will be used.
+        message frequency : "normal"
+        # Classes prefix
+        classes prefix : &8[&9Skript&8]
+        # Class prefix
+        class prefix : &8[&dPyromancer&8]
+        # Success
+        success : &8[&a&lSuccess&8]
+        # Warn
+        warn : &8[&6&lWarn&8]
+        # Message color
+        message color : &7
+
+        # Single fireball options
+        # Default is 3 seconds.
+        small cooldown : 3 seconds
+        # Default is 5 seconds.
+        big cooldown : 5 seconds
+
+        # Fireball barrage options
+        # Quantity (3)
+        quantity : 3
+        # Delay between shots (0.1 seconds)
+        delay : 0.1 seconds
+        # Default is 10 seconds.
+        small barrage cooldown : 10 seconds
+        # Default is 15 seconds.
+        big barrage cooldown : 15 seconds
+
+        # Phoenix Renewal
+        # Default 180 seconds.
+        phoenix cooldown : 180 seconds
+        # Regen/Revive window. Default 15 seconds.
+        phoenix window : 15 seconds
+        # Duration to burn attackers. Default 3 seconds.
+        burn time : 3 seconds
+        # Revive penalty (revive at 10-n hearts). Default 2.
+        revive penalty : 2.0
+
+
+# -----------------------------------------------------------------------------
+# Editing bellow this line may cause unintended effects. Please continue only if
+# you have sufficient general programming or scripting experience. For those not
+# experienced in Skript... its kind of odd so maybe this website can help...
+# http://en.njol.ch/projects/skript/doc/variables
+
+
+# Phoenix renewal
+on rightclick holding a {@renewal}:
+        if player has permission {@permission node}:
+                if {renewal.%player%} does not exist:
+                        set {renewal.%player%} to {@phoenix cooldown} ago
+                set {_waited} to difference between {renewal.%player%} and now
+                if {_waited} is smaller than {@phoenix cooldown}:
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} Phoenix Renewal is on cooldown for another %difference between {@phoenix cooldown} and {_waited}%{@message color}!"
+                        stop
+                else:
+                        send "{@classes prefix} {@class prefix} {@success}{@message color} You've used Phoenix Renewal!"
+                        set {renewal.%player%} to now
+                        apply regeneration 1 to player for {@phoenix window}
+                        set {phoenixrevive.%player%} to 1
+        else:
+                send "{@classes prefix} {@class prefix} {@warn}{@message color} You do not have pyromancer and thus cannot use phoenix renewal."
+on damage:
+        if victim has permission {@permission node}:
+                if difference between {renewal.%victim%} and now is smaller than {@phoenix window}:
+                        make console execute "burn %attacker% {@burn time}"
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} The power of the phoenix burns you!" to attacker
+                extinguish the victim
+on death:
+        if victim has permission {@permission node}:
+                if difference between {renewal.%victim%} and now is smaller than {@phoenix window}:
+                        if {phoenixrevive.%victim%} is 1:
+                                send "{@classes prefix} {@class prefix} {@success}{@message color} The phoenix revives you!" to victim
+                                cancel the event
+                                set {phoenixrevive.%victim%} to 0
+                                wait 1 tick
+                                damage victim by {@revive penalty} hearts
+
+
+# Fireball. Pyromancer's single shot active.
+on rightclick holding {@single fire}:
+        if player has permission {@permission node}:
+                if {singlelarge.%player%} does not exist:
+                        set {singlelarge.%player%} to now
+                set {_waited} to difference between {singlelarge.%player%} and now
+                if difference between {singlelarge.%player%} and now is larger than {@big cooldown}:
+                        set {singlelarge.%player%} to now
+                        send "{@classes prefix} {@class prefix} {@success}{@message color} You fired a single large fireball!"
+                        make the player shoot a fireball
+                else:
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You can't fire another large fireball for %difference between {_waited} and {@big cooldown}%{@message color}!"
+on leftclick holding {@single fire}:
+        if player has permission {@permission node}:
+                if {singlesmall.%player%} does not exist:
+                        set {singlesmall.%player%} to now
+                set {_waited} to difference between {singlesmall.%player%} and now
+                if difference between {singlesmall.%player%} and now is larger than {@small cooldown}:
+                        set {singlesmall.%player%} to now
+                        send "{@classes prefix} {@class prefix} {@success}{@message color} You fired a single small fireball!"
+                        make the player shoot a small fireball
+                else:
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You can't fire another small fireball for %difference between {_waited} and {@small cooldown}%{@message color}!"
+
+
+# Fireball barrage.
+on rightclick holding {@barrage fire}:
+        if player has permission {@permission node}:
+                if {barragelarge.%player%} does not exist:
+                        set {barragelarge.%player%} to now
+                set {_waited} to difference between {barragelarge.%player%} and now
+                if difference between {barragelarge.%player%} and now is larger than {@big barrage cooldown}:
+                        set {barragelarge.%player%} to now
+                        send "{@classes prefix} {@class prefix} {@success}{@message color} You fired a large fireball barrage!"
+                        set {_i} to 0
+                        while {_i} is less than {@quantity}:
+                                make the player shoot a fireball
+                                add 1 to {_i}
+                                wait for {@delay}
+                else:
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You can't fire another large fireball barrage for %difference between {_waited} and {@big barrage cooldown}%{@message color}!"
+on leftclick holding {@barrage fire}:
+        if player has permission {@permission node}:
+                if {barragesmall.%player%} does not exist:
+                        set {barragesmall.%player%} to now
+                set {_waited} to difference between {barragesmall.%player%} and now
+                if difference between {barragesmall.%player%} and now is larger than {@small barrage cooldown}:
+                        set {barragesmall.%player%} to now
+                        send "{@classes prefix} {@class prefix} {@success}{@message color} You fired a small fireball barrage!"
+                        set {_i} to 0
+                        while {_i} is less than {@quantity}:
+                                make the player shoot a small fireball
+                                add 1 to {_i}
+                                wait for {@delay}
+                else:
+                        send "{@classes prefix} {@class prefix} {@warn}{@message color} You can't fire another small fireball barrage for %difference between {_waited} and {@small barrage cooldown}%{@message color}!"

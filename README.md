@@ -1,7 +1,7 @@
 # Skript PvP Classes
  These are classes that can be implemented on a 1.9+ minecraft server. Current
  dependences are luck perms for permissions and skript to run the scripts. I'm
- planning on implementing at most 8 classes (4 fighter, 4 caster) because anymore 
+ planning on implementing at most 8 classes (4 fighter, 4 caster) because anymore
  than that could easily be considered overloaded and make entry for newer players
  difficult.
 
@@ -32,18 +32,26 @@
   bones and muscles. Caster classification.
 
 # Berserker
-  Class description: What better weapon can there be than the axe? Using the axe
-  the berserker deals ridiculous amounts of damage and can one shot unarmored
-  foes. Using rotten flesh the berserker can call forth a burst of speed or a
-  rage to inflict mortal wounds on even the strongest of foes. Berserkers need
-  some room to breath and so use leather leggings and chestplates, there are no
-  requirements for their other armor pieces. Fighter classification.
+  What better weapon can there be than the axe? Using the axe the berserker
+  deals ridiculous amounts of damage and can one shot unarmored foes. Using
+  rotten flesh the berserker can call forth a burst of speed or a rage to inflict
+  mortal wounds on even the strongest of foes. Berserkers need some room to
+  breath and so use leather leggings and chestplates, there are no requirements
+  for their other armor pieces. Fighter classification.
 
 # Paladin
-  Class description: Paladins focus on healing. What is the point of having good
-  armor if you cannot effectively heal? Paladins have a higher base health stat
-  then other classes and have a lot of healing baked into their kit. From
-  purifying themselves from debuffs, instantly healing themselves, and granting
-  damage immunity for 5 seconds. To more modest healing over time. The paladin's
-  strong magic requires a good conduit which is provided by a golden shovel and
-  full golden armor. Caster classification.
+  Paladins focus on healing. What is the point of having good armor if you
+  cannot effectively heal? Paladins have a higher base health stat then other
+  classes and have a lot of healing baked into their kit. From purifying
+  themselves from debuffs, instantly healing themselves, and granting damage
+  immunity for 5 seconds. To more modest healing over time. The paladin's strong
+  magic requires a good conduit which is provided by a golden shovel and full
+  golden armor. Caster classification.
+
+# Pyromancer
+  Burn your enemies, resurrect from the flames of the phoenix and watch your foes
+  crumble before your raw unchanneled power. The pyromancer casts fireball
+  barrages and single fire ball attacks from afar using the power of the blaze as
+  a conduit. If a conflict were to turn into a melee pyromancers can call on the
+  power of the phoenix to heal them and resurrect once from death. The
+  pyromancer has no armor requirements. Caster classification.
