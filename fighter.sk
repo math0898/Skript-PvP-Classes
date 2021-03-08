@@ -1,0 +1,54 @@
+# --------------------------------------------------
+# |                                                |
+# |                Classes - Fighter               |
+# |                                                |
+# --------------------------------------------------
+# Archetype description:
+#
+# This is basically the config section. To change a time enter it like <Number>
+# <Unit>. A few examples: 3 minutes, 15 seconds, 1 hour. To change damage, heal,
+# and chance values simply enter a number. A few examples: 50, 0.5, 1. To change
+# a true/false simply enter <true/false>. Examples:  true, false.
+
+options:
+
+        # General options
+        # Permission node
+        permission node : "skript.classes.fighter"
+
+        # Message Options
+        # TODO: Message frequency (None/Normal/Verbose). Players can also set
+        # their own. if they have not set one this one will be used.
+        message frequency : "normal"
+        # Classes prefix
+        classes prefix : &8[&9Skript&8]
+        # Class prefix
+        class prefix : &8[&dFighter&8]
+        # Success
+        success : &8[&a&lSuccess&8]
+        # Warn
+        warn : &8[&6&lWarn&8]
+        # Message color
+        message color : &7
+
+        # First aid options:
+        # How much paper should be consumed.
+        paper amount : 3
+        # How much should the player be healed.
+        heal amount : 3.5
+        # Cooldown
+        heal cooldown : 15 seconds
+
+
+
+# -----------------------------------------------------------------------------
+# Editing bellow this line may cause unintended effects. Please continue only if
+# you have sufficient general programming or scripting experience. For those not
+# experienced in Skript... its kind of odd so maybe this website can help...
+# http://en.njol.ch/projects/skript/doc/variables
+
+
+on rightclick holding paper:
+        if player has permission {@permission node}:
+                heal player by 3.5 hearts
+                remove 1 paper from player

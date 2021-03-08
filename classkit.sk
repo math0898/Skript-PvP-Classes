@@ -1,0 +1,21 @@
+command /classkit <text>:
+        permission: skript.classkit
+        trigger:
+                if {kit.%arg-1%::*} exists:
+                        set {_slot} to -1
+                        loop {kit.%arg-1%::*}:
+                                add 1 to {_slot}
+                                set slot {_slot} of player's inventory to loop-value
+                        send "&8[&9Skript&8] [&dclasskit&8] [&a&lSuccess&r&8] &7You have been given the %arg-1% kit."
+                else:
+                        send "&8[&9Skript&8] [&dclasskit&8] [&6&lWarn&r&8] &7That is not a valid class. We currently have assassin, bard, berserker, paladin, or pyromancer."
+command /setclasskit <text>:
+        permission: skript.classkit.admin
+        trigger:
+                if arg-1 is not "assassin" or "bard" or "berserker" or "paladin" or "pyromancer":
+                        send "&8[&9Skript&8] [&dclasskit&8] [&6&lWarn&r&8] &7That is not a valid class. We currently have assassin, bard, berserker, paladin, or pyromancer."
+                else:
+                        clear {kit.%arg-1%::*}
+                        loop all items in player's inventory:
+                                add loop-item to {kit.%arg-1%::*}
+                        send "&8[&9Skript&8] [&dclasskit&8] [&a&lSuccess&r&8] &7%arg-1% kit has been saved."

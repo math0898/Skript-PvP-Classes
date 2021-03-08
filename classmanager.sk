@@ -22,6 +22,7 @@ options:
         bard node : skript.classes.bard
         berserker node : skript.classes.berserker
         paladin node : skript.classes.paladin
+        pyromancer node : skript.classes.pyromancer
         caster node : skript.classes.caster
         fighter node : skript.classes.fighter
 
@@ -45,6 +46,7 @@ options:
         bard : true
         berserker : true
         paladin : true
+        pyromancer : true
 
 
 # -----------------------------------------------------------------------------
@@ -54,11 +56,63 @@ options:
 # http://en.njol.ch/projects/skript/doc/variables
 
 
+# Handles the actual joining of the class, the permission nodes. There is no
+# logic to determine if someone can join a class here though.
+function joinclass(user:player,choice:text):
+
+        # Classifications.
+        if {_choice} is "asassin" or "berserker":
+                make console execute command "lp user %{_user}% permission set {@fighter node}"
+        else if {_choice} is "bard" or "paladin" or "pyromancer":
+                make console execute command "lp user %{_user}% permission set {@caster node}"
+
+        # Actual permission nodes.
+        if {_choice} is "assassin":
+                make console execute command "lp user %{_user}% permission set {@assassin node}"
+        else if {_choice} is "bard":
+                make console execute command "lp user %{_user}% permission set {@bard node}"
+        else if {_choice} is "berserker":
+                make console execute command "lp user %{_user}% permission set {@berserker node}"
+        else if {_choice} is "paladin":
+                make console execute command "lp user %{_user}% permission set {@paladin node}"
+        else if {_choice} is "pyromancer":
+                make console execute command "lp user %{_user}% permission set {@pyromancer node}"
+
+        # Send a message that everything worked.
+        send "{@classes prefix} {@manager prefix} {@success}{@message color} You have joined the the %{_choice}%{@message color} class!" to {_user}
+
+
+# Sends a message containing all the currently valid classes. Admins also see
+# disabled classes.
+function classlist(user:player):
+
+        # Send the admin list.
+        if {_user} has permission "{@classes manager admin node}":
+                send "{@message color}- assassin(&8{@assassin}{@message color})" to {_user}
+                send "{@message color}- bard(&8{@bard}{@message color})" to {_user}
+                send "{@message color}- berserker(&8{@berserker}{@message color})" to {_user}
+                send "{@message color}- paladin(&8{@paladin}{@message color})" to {_user}
+                send "{@message color}- pyromancer(&8{@pyromancer}{@message color})" to {_user}
+
+        # Send the enabled classes one by one for non-admins
+        else:
+                if {@assassin}:
+                        send "{@message color}- assassin" to {_user}
+                if {@bard}:
+                        send "{@message color}- bard" to {_user}
+                if {@berserker}:
+                        send "{@message color}- berserker" to {_user}
+                if {@paladin}:
+                        send "{@message color}- paladin" to {_user}
+                if {@pyromancer}:
+                        send "{@message color}- pyromancer" to {_user}
+
+
 # Join a class.
 command /classjoin <text>:
         permission: {@classes manager node}
         trigger:
-                if player has permission "{@assassin node}" or "{@bard node}" or "{@berserker node}" or "{@paladin node}":
+                if player has permission "{@assassin node}" or "{@bard node}" or "{@berserker node}" or "{@paladin node}" or "{@pyromancer node}":
                         send "{@classes prefix} {@manager prefix} {@warn}{@message color} You must leave your current class to join a new one!"
                 else:
                         if arg-1 is "assassin":
@@ -89,44 +143,19 @@ command /classjoin <text>:
                                         send "{@classes prefix} {@manager prefix} {@success}{@message color} You have joined the paladin class!"
                                 else:
                                         send "{@classes prefix} {@manager prefix} {@warn}{@message color} Paladin is currently disabled."
+                        else if arg-1 is "pyromancer":
+                                if {@pyromancer}:
+                                        joinclass(player,"pyromancer")
+                                else if player has permission "{@classes manager admin node}":
+                                        joinclass(player,"pyromancer")
+                                else:
+                                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} Pyromancer is currently disabled."
                         else:
                                 send "{@classes prefix} {@manager prefix} {@warn}{@message color} %arg-1% {@message color}is not a recognized class. Currently enabled classes are:"
-                                if {@assassin}:
-                                        send "{@message color}- assassin"
-                                if {@bard}:
-                                        send "{@message color}- bard"
-                                if {@berserker}:
-                                        send "{@message color}- berserker"
-                                if {@paladin}:
-                                        send "{@message color}- paladin"
-# Leave a class.
-command /classleave <text>:
-        permission: {@classes manager node}
-        trigger:
-                if arg-1 is "assassin" or "bard" or "berserker" or "paladin":
-                        make console execute command "lp user %player% permission set {@caster node} false"
-                        make console execute command "lp user %player% permission set {@fighter node} false"
-                        if arg-1 is "assassin":
-                                make console execute command "lp user %player% permission set {@assassin node} false"
-                        else if arg-1 is "bard":
-                                make console execute command "lp user %player% permission set {@bard node} false"
-                        else if arg-1 is "berserker":
-                                make console execute command "lp user %player% permission set {@berserker node} false"
-                        else if arg-1 is "paladin":
-                                make console execute command "lp user %player% permission set {@paladin node} false"
-                        send "{@classes prefix} {@manager prefix} {@success}{@message color} You have left %arg-1%{@message color}!"
-                else:
-                        send "{@classes prefix} {@manager prefix} {@warn}{@message color} %arg-1% {@message color}is not a valid class. Valid classes are:"
-                        if {@assassin}:
-                                send "{@message color}- assassin"
-                        if {@bard}:
-                                send "{@message color}- bard"
-                        if {@berserker}:
-                                send "{@message color}- berserker"
-                        if {@paladin}:
-                                send "{@message color}- paladin"
+                                classlist(player)
 
-# Leave all classes.
+
+# Sets all class nodes to false
 command /classleaveall:
         permission: {@classes manager node}
         trigger:
@@ -136,4 +165,5 @@ command /classleaveall:
                 make console execute command "lp user %player% permission set {@bard node} false"
                 make console execute command "lp user %player% permission set {@berserker node} false"
                 make console execute command "lp user %player% permission set {@paladin node} false"
+                make console execute command "lp user %player% permission set {@pyromancer node} false"
                 send "{@classes prefix} {@manager prefix} {@success}{@message color} You have left all classes!"

@@ -6,11 +6,12 @@
  difficult.
 
 # The three archetypes
-  Casters: Casters have unique buffs and abilities they can cast on themselves
+Casters: Casters have unique buffs and abilities they can cast on themselves
     and in the future on their allies. Casters very wildly and each has their
     own strengths and weaknesses. In general though casters are weak to melee
     confrontations and take additional damage from the assassin class.
-  Fighters: Fighters can generally take a lot of damage and can deal a lot of
+
+Fighters: Fighters can generally take a lot of damage and can deal a lot of
     damage. Their strengths and weaknesses are fairly straight forward and their
     abilities although unique and interested are not quite as varied as the
     caster's. A caster caught between two fighters is likely to seem themselves
