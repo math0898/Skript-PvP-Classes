@@ -167,3 +167,52 @@ command /classleaveall:
                 make console execute command "lp user %player% permission set {@paladin node} false"
                 make console execute command "lp user %player% permission set {@pyromancer node} false"
                 send "{@classes prefix} {@manager prefix} {@success}{@message color} You have left all classes!"
+
+# Ui for the class manager.
+command /classes:
+        permission: {@classes manager node}
+        trigger:
+                open chest with 6 rows named "Combat Classes" to player
+                set {_slot} to 0
+                while {_slot} is less than 54:
+                        format slot {_slot} of player with a gray stained glass pane named " " to be unstealable
+                        add 1 to {_slot}
+
+                if player has permission "{@fighter node}":
+                        set slot 12 of player's current inventory to iron sword named "&8[&9Archtype&8]&7 Fighter"
+                        set the 1st line of lore of slot 12 of player's current inventory to "&7Through your years of training in combat"
+                        set the 2nd line of lore of slot 12 of player's current inventory to "&7you've suffered many injuries and can apply"
+                        set the 3rd line of lore of slot 12 of player's current inventory to "&7basic &3first aid &8[&6&lDev&8] &7using paper."
+                else if player has permission "{@caster node}":
+                        set slot 12 of player's current inventory to enchanting table named "&8[&9Archtype&8]&7 Caster"
+                        set the 1st line of lore of slot 12 of player's current inventory to "&7Casters have powerful abilities which depend"
+                        set the 2nd line of lore of slot 12 of player's current inventory to "&7on the class selected. Through your years"
+                        set the 3rd line of lore of slot 12 of player's current inventory to "&7of study in getting these skills your muscles"
+                        set the 4th line of lore of slot 12 of player's current inventory to "&7have grown weaker and you take additional"
+                        set the 5th line of lore of slot 12 of player's current inventory to "&7damage from &dplayers&7 who are &9fighters&7."
+                else:
+                        set slot 12 of player's current inventory to barrier named "&8[&9Archtype&8]&c&l None"
+                        set the 1st line of lore of slot 12 of player's current inventory to "&7You likely are not part of any class right now"
+                        set the 2nd line of lore of slot 12 of player's current inventory to "&7and as a result have no archtype."
+
+                if player has permission "{@assassin node}":
+                        set slot 14 of player's current inventory to ghast tear named "&8[&6Class&8]&7 Assassin"
+                else if player has permission "{@bard node}":
+                        set slot 14 of player's current inventory to note block named "&8[&6Class&8]&7 Bard"
+                else if player has permission "{@berserker node}":
+                        set slot 14 of player's current inventory to rotten flesh named "&8[&6Class&8]&7 Berserker"
+                else if player has permission "{@paladin node}":
+                        set slot 14 of player's current inventory to golden shovel named "&8[&6Class&8]&7 Paladin"
+                else if player has permission "{@pyromancer node}":
+                        set slot 14 of player's current inventory to blaze powder named "&8[&6Class&8]&7 Pyromancer"
+                else:
+                        set slot 14 of player's current inventory to barrier named "&8[&6Class]&8&c&l None"
+
+                set slot 29 of player's current inventory to ghast tear named "&8[&9Fighter&8] &8[&6Assassin&8]"
+                set slot 30 of player's current inventory to note block named "&8[&9Caster&8] &8[&6Bard&8]"
+                set slot 31 of player's current inventory to rotten flesh named "&8[&9Fighter&8] &8[&6Berserker&8]"
+                set slot 32 of player's current inventory to golden shovel named "&8[&9Caster&8] &8[&6Paladin&8]"
+                set slot 33 of player's current inventory to blaze powder named "&8[&9Caster&8] &8[&6Pyromancer&8]"
+
+                set slot 40 of player's current inventory to bow named "&8[&9Fighter&8] &8[&6Marksmen&8]"
+                set the 1st line of lore of slot 40 of player's current inventory to "&4In development"
